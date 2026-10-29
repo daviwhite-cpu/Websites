@@ -4,33 +4,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f7f6f2">
 <title>Hotkey</title>
 <style>
 :root {
   --bg: #f7f6f2;
-  --surface: #ffffff;
+  --surface: #fff;
   --soft: #f0eee8;
   --line: #e8e6df;
-  --text: #252525;
-  --muted: #77766f;
-  --radius: 16px;
+  --text: #272723;
+  --muted: #85837b;
+  --dark: #292925;
+  --radius: 15px;
 }
 * { box-sizing: border-box; }
 body {
   margin: 0;
+  min-height: 100vh;
   background: var(--bg);
   color: var(--text);
   font-family: Verdana, sans-serif;
-  min-height: 100vh;
+  font-size: 13px;
 }
-button, input { font: inherit; }
+button, input, textarea { font: inherit; }
 button { cursor: pointer; }
+button:focus-visible, input:focus-visible {
+  outline: 2px solid #aaa69a;
+  outline-offset: 3px;
+}
 .topbar {
-  height: 76px;
+  height: 72px;
   padding: 0 5%;
   display: flex;
   align-items: center;
-  gap: 26px;
+  gap: 25px;
   background: var(--surface);
   border-bottom: 1px solid var(--line);
   position: sticky;
@@ -38,31 +45,34 @@ button { cursor: pointer; }
   z-index: 5;
 }
 .brand {
+  color: var(--text);
   font-size: 23px;
   font-weight: bold;
-  letter-spacing: -1.3px;
+  letter-spacing: -1.4px;
   cursor: pointer;
+  white-space: nowrap;
 }
 .search {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--bg);
+  width: min(520px, 100%);
+  height: 42px;
+  margin: 0 auto;
+  padding: 0 13px;
   border: 1px solid var(--line);
   border-radius: 11px;
-  padding: 0 15px;
-  height: 42px;
-  max-width: 540px;
-  flex: 1;
-  margin: 0 auto;
+  background: var(--bg);
 }
+.search-symbol { color: var(--muted); font-size: 19px; }
 .search input {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   border: 0;
   outline: 0;
   background: transparent;
   color: var(--text);
-  font-size: 13px;
+  font-size: 12px;
 }
 .search button {
   border: 0;
@@ -71,268 +81,439 @@ button { cursor: pointer; }
   font-size: 19px;
 }
 .ai-toggle {
-  width: 40px;
-  height: 40px;
+  width: 41px;
+  height: 41px;
   flex-shrink: 0;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: var(--surface);
   display: grid;
   place-items: center;
-  font-size: 17px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: white;
+  color: var(--text);
+  font-size: 19px;
   transition: background .2s;
 }
 .ai-toggle:hover { background: var(--soft); }
 .layout {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 52px 28px 60px;
+  padding: 43px 28px 60px;
 }
 .section-label {
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  font-size: 10px;
   margin-bottom: 17px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 1.7px;
+  text-transform: uppercase;
 }
 .workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 260px;
-  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) 255px;
+  gap: 22px;
   align-items: start;
 }
 .calculator-card, .side-card {
-  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
+  background: var(--surface);
 }
 .calculator-card { padding: 25px; }
 .card-heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 23px;
 }
 .card-heading h1 {
-  font-size: 16px;
-  font-weight: 500;
   margin: 0;
+  font-size: 15px;
+  font-weight: 500;
 }
 .card-heading span {
-  font-size: 11px;
   color: var(--muted);
+  font-size: 10px;
 }
 .display {
-  width: 100%;
-  min-height: 106px;
-  border-radius: 12px;
+  min-height: 112px;
+  margin-bottom: 16px;
+  padding: 18px;
+  border-radius: 11px;
   background: var(--bg);
-  padding: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   align-items: flex-end;
-  margin-bottom: 17px;
+  justify-content: flex-end;
   overflow: hidden;
 }
 .previous {
-  font-size: 12px;
-  color: var(--muted);
   min-height: 18px;
+  color: var(--muted);
+  font-size: 11px;
   overflow-wrap: anywhere;
 }
 .current {
-  font-size: clamp(27px, 5vw, 38px);
-  letter-spacing: -1px;
-  margin-top: 8px;
   max-width: 100%;
+  margin-top: 8px;
+  font-size: clamp(27px, 4vw, 38px);
+  letter-spacing: -1.2px;
   overflow-wrap: anywhere;
 }
 .keys {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 9px;
 }
 .key {
-  min-height: 54px;
+  min-height: 53px;
   border: 1px solid var(--line);
   border-radius: 10px;
   background: white;
   color: var(--text);
   font-size: 15px;
-  transition: background .15s, transform .15s;
+  transition: background .15s, transform .12s;
 }
 .key:hover { background: var(--bg); }
 .key:active { transform: scale(.97); }
-.key.utility { background: var(--soft); }
-.key.operator { font-size: 18px; background: #f3f1eb; }
+.key.utility, .key.operator { background: var(--soft); }
 .key.equals {
-  background: #292929;
+  border-color: var(--dark);
+  background: var(--dark);
   color: white;
-  border-color: #292929;
 }
-.side-column { display: grid; gap: 16px; }
-.side-card { padding: 21px; }
+.keyboard-note {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 10px;
+  text-align: center;
+}
+.side-column { display: grid; gap: 15px; }
+.side-card { padding: 20px; }
 .side-card h2 {
-  font-size: 13px;
+  margin: 0 0 15px;
+  font-size: 12px;
   font-weight: 500;
-  margin: 0 0 18px;
 }
 .tool-row {
   display: flex;
   align-items: center;
-  gap: 12px;
   width: 100%;
+  gap: 11px;
   padding: 12px 0;
-  background: transparent;
   border: 0;
   border-bottom: 1px solid var(--line);
+  background: transparent;
   text-align: left;
   color: var(--text);
-  font-size: 12px;
+  font-size: 11px;
 }
-.tool-row:last-child { border-bottom: 0; padding-bottom: 2px; }
+.tool-row:last-child { border-bottom: 0; }
 .tool-icon {
   width: 34px;
   height: 34px;
   display: grid;
   place-items: center;
-  border-radius: 10px;
+  flex-shrink: 0;
+  border-radius: 9px;
   background: var(--bg);
-  font-size: 15px;
+  font-size: 16px;
 }
 .tool-row:hover .tool-icon { background: var(--soft); }
 .tool-row small {
   display: block;
-  color: var(--muted);
   margin-top: 5px;
-  font-size: 10px;
-}
-.keyboard-note {
-  margin-top: 17px;
-  font-size: 10px;
   color: var(--muted);
-  text-align: center;
+  font-size: 10px;
 }
+.shortcut {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 10px;
+}
+.shortcut:last-child { border-bottom: 0; }
+kbd {
+  padding: 3px 6px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 10px;
+}
+
+/* AI assistant */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(25,25,25,.16);
   z-index: 8;
+  background: rgba(35, 34, 30, .18);
   opacity: 0;
   visibility: hidden;
-  transition: .25s;
+  transition: opacity .25s, visibility .25s;
 }
 .overlay.open { opacity: 1; visibility: visible; }
 .ai-panel {
   position: fixed;
   z-index: 9;
-  right: 0;
   top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  width: min(440px, 100%);
   height: 100dvh;
-  width: min(400px, 100%);
   background: white;
   border-left: 1px solid var(--line);
   transform: translateX(102%);
   transition: transform .28s ease;
-  display: flex;
-  flex-direction: column;
 }
 .ai-panel.open { transform: translateX(0); }
 .ai-header {
-  height: 75px;
-  padding: 0 22px;
-  border-bottom: 1px solid var(--line);
+  min-height: 72px;
+  padding: 0 21px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid var(--line);
 }
-.ai-header h2 { font-size: 15px; font-weight: 500; }
-.close-ai {
+.ai-title {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.ai-mark {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
   border: 1px solid var(--line);
-  background: white;
+  border-radius: 50%;
+  background: var(--bg);
+  font-size: 17px;
+}
+.ai-title h2 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+.ai-status {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 10px;
+}
+.close-ai {
   width: 34px;
   height: 34px;
+  border: 1px solid var(--line);
   border-radius: 50%;
-  font-size: 19px;
+  background: white;
+  color: var(--text);
+  font-size: 20px;
 }
+.close-ai:hover { background: var(--soft); }
 .messages {
   flex: 1;
   overflow-y: auto;
-  padding: 22px;
+  padding: 21px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  align-items: stretch;
+  gap: 16px;
+  scroll-behavior: smooth;
 }
-.message {
-  max-width: 90%;
-  border-radius: 12px;
-  padding: 13px 15px;
+.welcome {
+  padding: 28px 5px 15px;
+}
+.welcome h3 {
+  margin: 0 0 10px;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -.7px;
+}
+.welcome p {
+  color: var(--muted);
   font-size: 12px;
   line-height: 1.8;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
 }
-.message.bot { background: var(--bg); align-self: flex-start; }
-.message.user { background: #292929; color: white; align-self: flex-end; }
+.suggestions {
+  display: grid;
+  gap: 8px;
+  margin-top: 22px;
+}
+.suggestion {
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: white;
+  text-align: left;
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.6;
+}
+.suggestion:hover { background: var(--bg); }
+.message {
+  max-width: 95%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.message.user {
+  align-self: flex-end;
+  max-width: 88%;
+  background: var(--dark);
+  color: white;
+  white-space: pre-wrap;
+}
+.message.bot {
+  align-self: flex-start;
+  background: var(--bg);
+  color: var(--text);
+}
+.message.bot p { margin: 0 0 10px; }
+.message.bot p:last-child { margin-bottom: 0; }
+.message.bot h1, .message.bot h2, .message.bot h3 {
+  margin: 12px 0 7px;
+  font-size: 14px;
+}
+.message.bot ul, .message.bot ol {
+  padding-left: 21px;
+  margin: 7px 0;
+}
+.message.bot li { margin: 4px 0; }
+.message.bot pre {
+  padding: 12px;
+  border-radius: 8px;
+  background: #eae8e1;
+  overflow-x: auto;
+  white-space: pre;
+}
+.message.bot code {
+  font-family: Consolas, monospace;
+  font-size: 11px;
+}
+.message.bot a {
+  color: #49473f;
+  text-decoration: underline;
+}
+.message.error {
+  border: 1px solid #e6d4c9;
+  background: #fbf5f0;
+}
+.typing {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 15px;
+}
+.typing span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #85837b;
+  animation: bounce 1s infinite ease-in-out;
+}
+.typing span:nth-child(2) { animation-delay: .15s; }
+.typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: .5; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
 .ai-form {
   display: flex;
+  align-items: flex-end;
   gap: 8px;
-  padding: 16px;
+  padding: 14px;
   border-top: 1px solid var(--line);
+  background: white;
 }
 .ai-form input {
   flex: 1;
   min-width: 0;
-  padding: 13px;
+  height: 43px;
+  padding: 0 13px;
   border: 1px solid var(--line);
   border-radius: 10px;
   outline: none;
+  background: var(--bg);
+  color: var(--text);
   font-size: 12px;
 }
-.ai-form input:focus { border-color: #aaa79e; }
+.ai-form input:focus { border-color: #b6b2a7; }
 .ai-form button {
+  height: 43px;
+  padding: 0 16px;
   border: 0;
   border-radius: 10px;
-  background: #292929;
+  background: var(--dark);
   color: white;
-  padding: 0 16px;
+  font-size: 11px;
 }
-@media (max-width: 700px) {
-  .topbar { padding: 0 16px; gap: 12px; height: 66px; }
+.ai-form button:disabled { opacity: .55; cursor: wait; }
+.ai-footnote {
+  padding: 0 15px 11px;
+  background: white;
+  color: var(--muted);
+  font-size: 9px;
+  text-align: center;
+}
+@media (max-width: 720px) {
+  .topbar { height: 65px; padding: 0 14px; gap: 12px; }
   .brand { font-size: 20px; }
-  .search { padding: 0 10px; }
-  .layout { padding: 30px 15px; }
+  .search { padding: 0 9px; }
+  .layout { padding: 28px 14px 40px; }
   .workspace { grid-template-columns: 1fr; }
   .calculator-card { padding: 17px; }
+  .side-column { grid-template-columns: 1fr 1fr; }
+  .side-card { padding: 15px; }
+  .key { min-height: 50px; }
+}
+@media (max-width: 440px) {
   .side-column { grid-template-columns: 1fr; }
-  .key { min-height: 51px; }
+  .search input { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 </style>
 </head>
 <body>
+
 <header class="topbar">
-  <div class="brand" onclick="resetHome()">hotkey.</div>
-  <form class="search" id="searchForm">
-    <span aria-hidden="true">⌕</span>
-    <input id="searchInput" placeholder="Search the web..." aria-label="Search the web">
-    <button type="submit" aria-label="Submit search">↗</button>
+  <div class="brand" role="button" tabindex="0" onclick="resetHome()" aria-label="Hotkey home">hotkey.</div>
+
+  <form class="search" id="searchForm" role="search">
+    <span class="search-symbol" aria-hidden="true">⌕</span>
+    <input id="searchInput" type="search" placeholder="Search the web..." aria-label="Search the web">
+    <button type="submit" aria-label="Search">↗</button>
   </form>
+
   <button class="ai-toggle" id="openAI" aria-label="Open AI assistant" title="AI assistant">✳</button>
 </header>
 
 <main class="layout" id="home">
   <div class="section-label">Workspace</div>
+
   <div class="workspace">
-    <section class="calculator-card">
+    <section class="calculator-card" aria-label="Calculator">
       <div class="card-heading">
         <h1>Calculator</h1>
         <span>Standard</span>
       </div>
-      <div class="display" aria-live="polite">
+
+      <div class="display" aria-live="polite" aria-atomic="true">
         <div class="previous" id="previous"></div>
         <div class="current" id="current">0</div>
       </div>
+
       <div class="keys" id="keys">
         <button class="key utility" data-action="clear">AC</button>
         <button class="key utility" data-action="sign">+/−</button>
@@ -359,213 +540,582 @@ button { cursor: pointer; }
         <button class="key" data-value=".">.</button>
         <button class="key equals" data-action="equals">=</button>
       </div>
+
       <div class="keyboard-note">You can also use your keyboard</div>
     </section>
 
     <aside class="side-column">
       <section class="side-card">
         <h2>Quick tools</h2>
+
         <button class="tool-row" onclick="openAI()">
           <span class="tool-icon">✳</span>
           <span>AI assistant<small>Ask a question</small></span>
         </button>
+
         <button class="tool-row" onclick="focusSearch()">
           <span class="tool-icon">⌕</span>
           <span>Web search<small>Find something online</small></span>
         </button>
+
         <button class="tool-row" onclick="resetHome()">
           <span class="tool-icon">⌂</span>
           <span>Home<small>Reset calculator</small></span>
         </button>
       </section>
+
       <section class="side-card">
         <h2>Keyboard shortcuts</h2>
-        <button class="tool-row" onclick="focusSearch()">
-          <span class="tool-icon">⌘</span>
-          <span>Search<small>Click to start searching</small></span>
-        </button>
-        <button class="tool-row" onclick="openAI()">
-          <span class="tool-icon">↗</span>
-          <span>Open assistant<small>Get help with a task</small></span>
-        </button>
+        <div class="shortcut"><span>Calculate</span><kbd>Enter</kbd></div>
+        <div class="shortcut"><span>Delete digit</span><kbd>Backspace</kbd></div>
+        <div class="shortcut"><span>Clear</span><kbd>Esc</kbd></div>
       </section>
     </aside>
   </div>
 </main>
 
 <div class="overlay" id="overlay"></div>
-<aside class="ai-panel" id="aiPanel" aria-label="AI assistant">
+
+<aside class="ai-panel" id="aiPanel" aria-label="Hotkey AI assistant" aria-hidden="true">
   <header class="ai-header">
-    <h2>AI assistant</h2>
+    <div class="ai-title">
+      <div class="ai-mark">✳</div>
+      <div>
+        <h2>Hotkey AI</h2>
+        <div class="ai-status" id="aiStatus">Ready to help</div>
+      </div>
+    </div>
     <button class="close-ai" id="closeAI" aria-label="Close assistant">×</button>
   </header>
-  <div class="messages" id="messages">
-    <div class="message bot">Hi! What can I help you with?</div>
+
+  <div class="messages" id="messages" aria-live="polite">
+    <div class="welcome" id="welcome">
+      <h3>What can I help with?</h3>
+      <p>Ask a question, solve a problem, write code, or explore an idea.</p>
+      <div class="suggestions">
+        <button class="suggestion" data-prompt="Explain a complicated topic in simple terms.">Explain something complicated</button>
+        <button class="suggestion" data-prompt="Help me write a useful piece of code and explain how it works.">Write and explain code</button>
+        <button class="suggestion" data-prompt="Help me brainstorm a creative project with some original ideas.">Brainstorm ideas</button>
+      </div>
+    </div>
   </div>
+
   <form class="ai-form" id="aiForm">
-    <input id="aiInput" placeholder="Write a message..." autocomplete="off" aria-label="Message">
-    <button type="submit">Send</button>
+    <input id="aiInput" placeholder="Ask Hotkey anything..." autocomplete="off" aria-label="Message to AI" maxlength="12000">
+    <button id="sendButton" type="submit">Send</button>
   </form>
+  <div class="ai-footnote">AI can make mistakes. Check important information.</div>
 </aside>
 
 <script>
-const current = document.getElementById('current');
-const previous = document.getElementById('previous');
-let expression = '0';
-let stored = null;
-let operator = null;
-let fresh = false;
+/* --------------------------------------------------
+   CONFIGURATION
+   The server must expose POST /api/chat.
+   Never put your private AI API key in this file.
+-------------------------------------------------- */
 
-function render() {
-  current.textContent = expression;
+const AI_ENDPOINT = "/api/chat";
+
+/* CALCULATOR */
+
+const currentDisplay = document.getElementById("current");
+const previousDisplay = document.getElementById("previous");
+
+let expression = "0";
+let storedValue = null;
+let activeOperator = null;
+let waitingForNumber = false;
+
+function renderCalculator() {
+  currentDisplay.textContent = expression;
 }
-function resetCalc() {
-  expression = '0';
-  stored = null;
-  operator = null;
-  fresh = false;
-  previous.textContent = '';
-  render();
+
+function resetCalculator() {
+  expression = "0";
+  storedValue = null;
+  activeOperator = null;
+  waitingForNumber = false;
+  previousDisplay.textContent = "";
+  renderCalculator();
 }
-function calculate() {
-  if (stored === null || !operator) return;
-  const a = stored;
-  const b = Number(expression);
+
+function formatNumber(value) {
+  if (!Number.isFinite(value)) return "Error";
+  return String(Number(value.toPrecision(12)));
+}
+
+function calculateResult() {
+  if (storedValue === null || activeOperator === null) return;
+
+  const first = storedValue;
+  const second = Number(expression);
   let result;
-  if (operator === '+') result = a + b;
-  if (operator === '-') result = a - b;
-  if (operator === '*') result = a * b;
-  if (operator === '/') result = b === 0 ? NaN : a / b;
-  previous.textContent = `${a} ${operator} ${b} =`;
-  expression = Number.isFinite(result)
-    ? String(Number(result.toPrecision(12)))
-    : 'Error';
-  stored = null;
-  operator = null;
-  fresh = true;
-  render();
-}
-function press(value, action) {
-  if (action === 'clear') return resetCalc();
-  if (action === 'backspace') {
-    expression = expression.length > 1 ? expression.slice(0, -1) : '0';
-    render();
-    return;
-  }
-  if (action === 'sign') {
-    if (expression !== '0' && expression !== 'Error')
-      expression = String(-Number(expression));
-    render();
-    return;
-  }
-  if (action === 'percent') {
-    expression = String(Number(expression) / 100);
-    render();
-    return;
-  }
-  if (action === 'equals') return calculate();
 
-  if (['+', '-', '*', '/'].includes(value)) {
-    if (operator && !fresh) calculate();
-    stored = Number(expression);
-    operator = value;
-    previous.textContent = `${expression} ${value}`;
-    fresh = true;
+  switch (activeOperator) {
+    case "+": result = first + second; break;
+    case "-": result = first - second; break;
+    case "*": result = first * second; break;
+    case "/": result = second === 0 ? NaN : first / second; break;
+    default: return;
+  }
+
+  previousDisplay.textContent =
+    `${first} ${activeOperator} ${second} =`;
+
+  expression = formatNumber(result);
+  storedValue = null;
+  activeOperator = null;
+  waitingForNumber = true;
+  renderCalculator();
+}
+
+function calculatorPress(value, action) {
+  if (action === "clear") {
+    resetCalculator();
     return;
   }
-  if (value === '.') {
-    if (fresh || expression === 'Error') expression = '0';
-    if (!expression.includes('.')) expression += '.';
-    fresh = false;
-    render();
+
+  if (action === "backspace") {
+    if (expression === "Error" || waitingForNumber) {
+      expression = "0";
+      waitingForNumber = false;
+    } else {
+      expression = expression.length > 1
+        ? expression.slice(0, -1)
+        : "0";
+    }
+    renderCalculator();
     return;
   }
-  if (expression === 'Error' || fresh || expression === '0') {
+
+  if (action === "sign") {
+    if (expression !== "Error" && Number(expression) !== 0) {
+      expression = formatNumber(-Number(expression));
+    }
+    renderCalculator();
+    return;
+  }
+
+  if (action === "percent") {
+    if (expression !== "Error") {
+      expression = formatNumber(Number(expression) / 100);
+    }
+    renderCalculator();
+    return;
+  }
+
+  if (action === "equals") {
+    calculateResult();
+    return;
+  }
+
+  if (["+", "-", "*", "/"].includes(value)) {
+    if (expression === "Error") return;
+
+    if (activeOperator && !waitingForNumber) {
+      calculateResult();
+      if (expression === "Error") return;
+    }
+
+    storedValue = Number(expression);
+    activeOperator = value;
+    previousDisplay.textContent = `${expression} ${value}`;
+    waitingForNumber = true;
+    return;
+  }
+
+  if (value === ".") {
+    if (waitingForNumber || expression === "Error") {
+      expression = "0";
+      waitingForNumber = false;
+    }
+
+    if (!expression.includes(".")) expression += ".";
+    renderCalculator();
+    return;
+  }
+
+  if (!/^\d$/.test(value)) return;
+
+  if (expression === "Error" || waitingForNumber || expression === "0") {
     expression = value;
-    fresh = false;
+    waitingForNumber = false;
   } else if (expression.length < 16) {
     expression += value;
   }
-  render();
+
+  renderCalculator();
 }
-document.getElementById('keys').addEventListener('click', e => {
-  const button = e.target.closest('button');
-  if (button) press(button.dataset.value, button.dataset.action);
+
+document.getElementById("keys").addEventListener("click", event => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  calculatorPress(button.dataset.value, button.dataset.action);
 });
-document.addEventListener('keydown', e => {
-  if (e.target.matches('input')) return;
-  if (/^[0-9.]$/.test(e.key)) press(e.key);
-  else if (['+', '-', '*', '/'].includes(e.key)) press(e.key);
-  else if (e.key === 'Enter' || e.key === '=') press('', 'equals');
-  else if (e.key === 'Backspace') press('', 'backspace');
-  else if (e.key === 'Escape') {
-    resetCalc();
+
+document.addEventListener("keydown", event => {
+  if (event.target.matches("input, textarea")) return;
+
+  if (/^\d$/.test(event.key) || event.key === ".") {
+    calculatorPress(event.key);
+  } else if (["+", "-", "*", "/"].includes(event.key)) {
+    calculatorPress(event.key);
+  } else if (event.key === "Enter" || event.key === "=") {
+    event.preventDefault();
+    calculatorPress("", "equals");
+  } else if (event.key === "Backspace") {
+    calculatorPress("", "backspace");
+  } else if (event.key === "Escape") {
+    resetCalculator();
     closeAI();
   }
 });
+
+/* HOME AND WEB SEARCH */
+
 function resetHome() {
-  resetCalc();
-  document.getElementById('home').scrollIntoView({behavior:'smooth'});
+  resetCalculator();
+  closeAI();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
 function focusSearch() {
-  document.getElementById('searchInput').focus();
+  document.getElementById("searchInput").focus();
 }
-document.getElementById('searchForm').addEventListener('submit', e => {
-  e.preventDefault();
-  const query = document.getElementById('searchInput').value.trim();
-  if (query) window.open(
-    'https://www.google.com/search?q=' + encodeURIComponent(query),
-    '_blank',
-    'noopener,noreferrer'
+
+document.querySelector(".brand").addEventListener("keydown", event => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    resetHome();
+  }
+});
+
+document.getElementById("searchForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const input = document.getElementById("searchInput");
+  const query = input.value.trim();
+  if (!query) return;
+
+  window.open(
+    "https://www.google.com/search?q=" + encodeURIComponent(query),
+    "_blank",
+    "noopener,noreferrer"
   );
 });
 
-const panel = document.getElementById('aiPanel');
-const overlay = document.getElementById('overlay');
-function openAI() {
-  panel.classList.add('open');
-  overlay.classList.add('open');
-  document.getElementById('aiInput').focus();
-}
-function closeAI() {
-  panel.classList.remove('open');
-  overlay.classList.remove('open');
-}
-document.getElementById('openAI').addEventListener('click', openAI);
-document.getElementById('closeAI').addEventListener('click', closeAI);
-overlay.addEventListener('click', closeAI);
+/* AI PANEL */
 
-const messages = document.getElementById('messages');
-document.getElementById('aiForm').addEventListener('submit', e => {
-  e.preventDefault();
-  const input = document.getElementById('aiInput');
-  const text = input.value.trim();
-  if (!text) return;
-  addMessage(text, 'user');
-  input.value = '';
-  const answer = getDemoReply(text);
-  setTimeout(() => addMessage(answer, 'bot'), 250);
+const aiPanel = document.getElementById("aiPanel");
+const overlay = document.getElementById("overlay");
+const messagesElement = document.getElementById("messages");
+const aiInput = document.getElementById("aiInput");
+const sendButton = document.getElementById("sendButton");
+const aiStatus = document.getElementById("aiStatus");
+const welcome = document.getElementById("welcome");
+
+function openAI() {
+  aiPanel.classList.add("open");
+  overlay.classList.add("open");
+  aiPanel.setAttribute("aria-hidden", "false");
+  setTimeout(() => aiInput.focus(), 150);
+}
+
+function closeAI() {
+  aiPanel.classList.remove("open");
+  overlay.classList.remove("open");
+  aiPanel.setAttribute("aria-hidden", "true");
+}
+
+document.getElementById("openAI").addEventListener("click", openAI);
+document.getElementById("closeAI").addEventListener("click", closeAI);
+overlay.addEventListener("click", closeAI);
+
+/* Keep chat history during this page session. */
+const chatHistory = [];
+let isThinking = false;
+
+function addUserMessage(text) {
+  const bubble = document.createElement("div");
+  bubble.className = "message user";
+  bubble.textContent = text;
+  messagesElement.appendChild(bubble);
+  scrollMessages();
+}
+
+function addBotMessage(text, isError = false) {
+  const bubble = document.createElement("div");
+  bubble.className = "message bot" + (isError ? " error" : "");
+  renderSafeMarkdown(bubble, text);
+  messagesElement.appendChild(bubble);
+  scrollMessages();
+  return bubble;
+}
+
+function scrollMessages() {
+  messagesElement.scrollTop = messagesElement.scrollHeight;
+}
+
+function showTyping() {
+  const bubble = document.createElement("div");
+  bubble.className = "message bot typing";
+  bubble.setAttribute("aria-label", "AI is thinking");
+
+  for (let i = 0; i < 3; i++) {
+    bubble.appendChild(document.createElement("span"));
+  }
+
+  messagesElement.appendChild(bubble);
+  scrollMessages();
+  return bubble;
+}
+
+/*
+  Minimal safe Markdown renderer:
+  supports paragraphs, headings, lists, inline code,
+  fenced code, bold text and links.
+  User and model text is inserted as text, not raw HTML.
+*/
+function renderSafeMarkdown(container, source) {
+  const lines = String(source || "").replace(/\r/g, "").split("\n");
+  let list = null;
+  let paragraph = [];
+
+  function flushParagraph() {
+    if (!paragraph.length) return;
+    const p = document.createElement("p");
+    appendInline(p, paragraph.join(" "));
+    container.appendChild(p);
+    paragraph = [];
+  }
+
+  function endList() {
+    if (list) {
+      container.appendChild(list);
+      list = null;
+    }
+  }
+
+  function appendInline(parent, text) {
+    const pattern = /(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\(https?:\/\/[^ )]+\))/g;
+    let last = 0;
+    let match;
+
+    while ((match = pattern.exec(text)) !== null) {
+      parent.appendChild(document.createTextNode(text.slice(last, match.index)));
+
+      const token = match[0];
+
+      if (token.startsWith("**")) {
+        const strong = document.createElement("strong");
+        strong.textContent = token.slice(2, -2);
+        parent.appendChild(strong);
+      } else if (token.startsWith("`")) {
+        const code = document.createElement("code");
+        code.textContent = token.slice(1, -1);
+        parent.appendChild(code);
+      } else {
+        const parts = token.match(/^\[([^\]]+)\]\((https?:\/\/[^ )]+)\)$/);
+        if (parts) {
+          try {
+            const url = new URL(parts[2]);
+            if (url.protocol === "http:" || url.protocol === "https:") {
+              const a = document.createElement("a");
+              a.textContent = parts[1];
+              a.href = url.href;
+              a.target = "_blank";
+              a.rel = "noopener noreferrer";
+              parent.appendChild(a);
+            } else {
+              parent.appendChild(document.createTextNode(parts[1]));
+            }
+          } catch {
+            parent.appendChild(document.createTextNode(parts[1]));
+          }
+        }
+      }
+
+      last = pattern.lastIndex;
+    }
+
+    parent.appendChild(document.createTextNode(text.slice(last)));
+  }
+
+  let inCode = false;
+  let codeLines = [];
+
+  for (const line of lines) {
+    if (line.trim().startsWith("```")) {
+      flushParagraph();
+      endList();
+
+      if (!inCode) {
+        inCode = true;
+        codeLines = [];
+      } else {
+        const pre = document.createElement("pre");
+        const code = document.createElement("code");
+        code.textContent = codeLines.join("\n");
+        pre.appendChild(code);
+        container.appendChild(pre);
+        inCode = false;
+      }
+      continue;
+    }
+
+    if (inCode) {
+      codeLines.push(line);
+      continue;
+    }
+
+    const heading = line.match(/^(#{1,3})\s+(.+)/);
+    if (heading) {
+      flushParagraph();
+      endList();
+      const h = document.createElement("h" + heading[1].length);
+      appendInline(h, heading[2]);
+      container.appendChild(h);
+      continue;
+    }
+
+    const bullet = line.match(/^\s*[-*]\s+(.+)/);
+    const numbered = line.match(/^\s*\d+[.)]\s+(.+)/);
+
+    if (bullet || numbered) {
+      flushParagraph();
+
+      const wantedTag = bullet ? "ul" : "ol";
+      if (!list || list.tagName.toLowerCase() !== wantedTag) {
+        endList();
+        list = document.createElement(wantedTag);
+      }
+
+      const li = document.createElement("li");
+      appendInline(li, (bullet || numbered)[1]);
+      list.appendChild(li);
+      continue;
+    }
+
+    endList();
+
+    if (!line.trim()) {
+      flushParagraph();
+    } else {
+      paragraph.push(line.trim());
+    }
+  }
+
+  flushParagraph();
+  endList();
+
+  if (inCode) {
+    const pre = document.createElement("pre");
+    const code = document.createElement("code");
+    code.textContent = codeLines.join("\n");
+    pre.appendChild(code);
+    container.appendChild(pre);
+  }
+
+  if (!container.childNodes.length) {
+    container.textContent = source || "";
+  }
+}
+
+/* REAL AI CONNECTION */
+
+async function sendAIMessage(text) {
+  if (isThinking || !text.trim()) return;
+
+  isThinking = true;
+  welcome.style.display = "none";
+  aiInput.disabled = true;
+  sendButton.disabled = true;
+  sendButton.textContent = "...";
+  aiStatus.textContent = "Thinking...";
+
+  addUserMessage(text);
+  chatHistory.push({ role: "user", content: text });
+
+  const typing = showTyping();
+
+  try {
+    const response = await fetch(AI_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: chatHistory.slice(-20)
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        response.status === 404
+          ? "The AI server route was not found. Make sure Hotkey is running through the configured server."
+          : "The AI server returned an error (" + response.status + "). Please try again."
+      );
+    }
+
+    const data = await response.json();
+
+    if (typeof data.reply !== "string" || !data.reply.trim()) {
+      throw new Error("The AI server returned an empty response.");
+    }
+
+    typing.remove();
+
+    chatHistory.push({
+      role: "assistant",
+      content: data.reply
+    });
+
+    addBotMessage(data.reply);
+    aiStatus.textContent = "Ready to help";
+  } catch (error) {
+    typing.remove();
+
+    /* Remove the unanswered user message from API history. */
+    if (chatHistory.length && chatHistory[chatHistory.length - 1].role === "user") {
+      chatHistory.pop();
+    }
+
+    addBotMessage(
+      error.message || "Unable to connect to the AI. Check your server and try again.",
+      true
+    );
+    aiStatus.textContent = "Connection issue";
+    console.error("Hotkey AI error:", error);
+  } finally {
+    isThinking = false;
+    aiInput.disabled = false;
+    sendButton.disabled = false;
+    sendButton.textContent = "Send";
+    aiInput.focus();
+  }
+}
+
+document.getElementById("aiForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const text = aiInput.value.trim();
+  if (!text || isThinking) return;
+
+  aiInput.value = "";
+  sendAIMessage(text);
 });
-function addMessage(text, type) {
-  const message = document.createElement('div');
-  message.className = 'message ' + type;
-  message.textContent = text;
-  messages.appendChild(message);
-  messages.scrollTop = messages.scrollHeight;
-}
-function getDemoReply(text) {
-  const q = text.toLowerCase();
-  if (q.includes('hello') || q.includes('hi ')) {
-    return 'Hello! I’m ready to help. Ask me a question or tell me what you’re working on.';
+
+document.querySelectorAll(".suggestion").forEach(button => {
+  button.addEventListener("click", () => {
+    openAI();
+    sendAIMessage(button.dataset.prompt);
+  });
+});
+
+/* Ctrl/Cmd+K opens web search from anywhere. */
+document.addEventListener("keydown", event => {
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+    event.preventDefault();
+    focusSearch();
   }
-  if (q.includes('time') || q.includes('date')) {
-    return 'You can check the current date and time on your device. This demo assistant does not have live clock access.';
-  }
-  if (q.includes('calculate') || /[0-9]\s*[+\-*/]\s*[0-9]/.test(q)) {
-    return 'Use the calculator on the main page for calculations. I’m a demo assistant and cannot evaluate arbitrary math yet.';
-  }
-  return 'Thanks for your message! This assistant panel is currently a front-end demo, so it is not connected to a live AI service yet. You can connect an AI API to enable real answers.';
-}
+});
 </script>
 </body>
 </html>
